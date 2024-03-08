@@ -1,17 +1,14 @@
 import requests
 
-def get_location(user_id):
-    url = f"https://discordapi.com/api/v9/users/{user_id}/?query=location"
+def get_location(name):
+    url = f"https://api.opencagedata.com/geocode/v1/json?q={name}&key=YOUR_API_KEY"
     response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        if "location" in data:
-            return data["location"]
-    return None
+    data = response.json()
+    if data["status"] == "OK":
+        return data["results"][0]["formatted_address"]
+    else:
+        return "Başarısız"
 
-user_id = input("discorddaki kişinin idsini girin: ")
-location = get_location(user_id)
-if location:
-    print(f"kişinin babaanne konumu: {location}")
-else:
-    print("konum bulunamadı")
+name = input("discord ad gir: ")
+location = get_location(name)
+print(f"Babaannesinin konumu: {location}")
